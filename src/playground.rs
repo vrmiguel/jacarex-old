@@ -1,4 +1,4 @@
-use crate::prompt::{self, Prompt};
+use crate::prompt::Prompt;
 use crate::utils;
 
 use regex::Regex;
