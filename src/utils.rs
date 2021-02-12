@@ -1,23 +1,18 @@
 use rustyline::error::ReadlineError;
 
 use regex::Regex;
-use core::ops::Range;
 use colored::*;
 
 /// Checks for Regex matches
 pub(crate) fn print_captures(line: &str, phrases: &Vec<String>) {
     
     let re = match Regex::new(line) {
-        Ok(re) => {
-            re
-        },
+        Ok(re) => re,
         Err(err) => {
             println!("Regex compilation error: {:?}", err);
             return;
         }
     };
-
-    // let t = re.captures(phrase.as_str();
 
     let captures : Vec<Option<regex::Captures>> =
         phrases
@@ -37,8 +32,6 @@ pub(crate) fn print_captures(line: &str, phrases: &Vec<String>) {
             }
         }
     }
-
-    // let captures = RE.captures(word);
 }
 
 pub(crate) fn check_error(err: ReadlineError) {
@@ -73,22 +66,4 @@ fn highlight_matches(matches: &Vec<regex::Match>, phrase: &String) {
         }
     }
     println!("");
-
-    // dbg!(highlights);
-
-    // print_highlights(&highlights, phrase);
-
-    // let range = t.range();
-    // dbg!(t);
-    // let t = t.
-    // for match_ in matches {
-    //     let phrase: Vec<char> = phrase.chars().collect();
-    //     let mut match_counter = 0_usize;
-
-    //     for ch in match_.as_str().chars() {
-    //         if ch == phrase[match_counter] {
-    //             // res += ;
-    //         }
-    //     }
-    // }
 }

@@ -1,8 +1,6 @@
 use crate::prompt::Prompt;
 use crate::utils;
 
-use regex::Regex;
-
 use colored::*;
 
 struct PlaygroundData {
@@ -10,7 +8,7 @@ struct PlaygroundData {
     pub editor: Prompt,
 }
 
-impl PlaygroundData {
+impl PlaygroundData {    
     fn new () -> Self {
         Self {
             phrases: vec![],
@@ -18,24 +16,37 @@ impl PlaygroundData {
         }
     }
 
+    fn print_help() {
+        println!();
+        println!();
+    }
+
     fn parse (&mut self, line: &str) {
-        if line.trim().starts_with('#') {
+        let line = line.trim();
+        if line.starts_with('#') {
             // Likely a command, such as #help or #add
-            let words: Vec<&str> = line.trim().split(' ').collect();
+            let words: Vec<&str> = line.split(' ').collect();
             match words[0] {
                 "#help" => { 
-                    // Print help
+                    println!("help heree")  
                 },
                 "#add" => {
+                    // TODO: add support for "# add" as well
                     words.iter().skip(1).for_each(|&s| self.phrases.push(s.into()));
                     return;
                 },
+                "#read" => {
+                    // TODO: read a file text into Jacarex
+                },
+                "#clear" => {
+                    self.phrases.clear();
+                    return;
+                }
                 _ => {}
             }
         }
 
         utils::print_captures(line, &self.phrases);
-
     }
 }
 
@@ -49,7 +60,7 @@ impl PlaygroundManager {
             "Playground".green().bold(),
             "#help".blue(),
             "#add".blue(),
-            "<string>".blue().bold(),
+            "<strings>".blue().bold(),
         )
     }
 
