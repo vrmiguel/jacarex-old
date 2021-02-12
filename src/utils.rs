@@ -1,6 +1,7 @@
 use rustyline::error::ReadlineError;
 
 use regex::Regex;
+use core::ops::Range;
 use colored::*;
 
 /// Checks for Regex matches
@@ -27,8 +28,6 @@ pub(crate) fn print_captures(line: &str, phrases: &Vec<String>) {
     for (phrase, capture) in phrases.iter().zip(captures.iter()) {
         match capture {
             Some(cap) => {
-                // TODO: this is slow :/ 
-                // I really need to find a better way of highlighting matches
                 let matches: Vec<regex::Match> = cap.iter().filter_map(|x| x).collect();
                 highlight_matches(&matches, phrase);
             }
@@ -56,14 +55,31 @@ pub(crate) fn check_error(err: ReadlineError) {
     }
 }
 
-// TODO: pls do this better
 fn highlight_matches(matches: &Vec<regex::Match>, phrase: &String) {
-    // let res = String::new();
-    // Naming this match_ to avoid usage of reserved keyword match
-    println!("{}", phrase);
-    let t = matches[0];
-    let t = t.range();
-    dbg!(t);
+    let mut ranges = matches.iter().map(|x: &regex::Match| x.range());
+    
+    let mut i = 0_usize;
+    while i <= phrase.len() {
+        if let Some(range) = ranges.next() {
+            if i < range.start {
+                print!("{}", &phrase[0..range.start]);
+            }
+            print!("{}", &phrase[range.clone()].green());
+            i = range.end;
+        } else {
+            // Check if there's still parts of the string that weren't printed
+            print!("{}", &phrase[i..]);
+            break;
+        }
+    }
+    println!("");
+
+    // dbg!(highlights);
+
+    // print_highlights(&highlights, phrase);
+
+    // let range = t.range();
+    // dbg!(t);
     // let t = t.
     // for match_ in matches {
     //     let phrase: Vec<char> = phrase.chars().collect();
