@@ -4,12 +4,11 @@ mod utils;
 mod school;
 mod cliargs;
 
-use std::env;
-
-use cliargs::CLIArgs;
+use cliargs::*;
 
 fn main() {
-    let cliargs = CLIArgs::from(env::args());
+    let matches = get_matches();
+    let cliargs = CLIArgValues::from(matches);
     dbg!(&cliargs);
     playground::PlaygroundManager::start();
 }
