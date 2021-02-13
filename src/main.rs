@@ -10,5 +10,6 @@ use cliargs::CLIArgs;
 
 fn main() {
     let cliargs = CLIArgs::from(env::args());
+    dbg!(&cliargs);
     playground::PlaygroundManager::start();
 }
