@@ -1,6 +1,6 @@
 use clap::{self, Arg};
 
-use std::env;
+use std::unreachable;
 
 #[derive(Debug)]
 pub enum PlaygroundArgValues {
@@ -38,14 +38,20 @@ pub fn get_matches() -> clap::ArgMatches<'static> {
                     .arg(
                         Arg::with_name("words")
                             .required(false)
+                            .long("words")
+                            .short("w")
                             .multiple(true)
+                            .takes_value(true)
                             // I'm only making this conflict to get better code ergonomics 
-                            .conflicts_with("filename")
                             .help("Loads the words passed as arguments as test strings for the tester"),
                     ).arg(
                         Arg::with_name("filename")
                             .required(false)
+                            .long("filename")
+                            .short("f")
                             .multiple(false)
+                            .takes_value(true)
+                            .conflicts_with("words")
                             // TODO: add a file size limit?
                             .help("Loads the words passed as arguments as test strings for the tester"),
                     )
@@ -62,6 +68,8 @@ pub fn get_matches() -> clap::ArgMatches<'static> {
                     Arg::with_name("lesson")
                         .required(false)
                         .multiple(false)
+                        .long("lesson")
+                        .short("l")
                         .help("Sets the lesson to be loaded")
                         // .possible_values()
                         .takes_value(true)
@@ -72,44 +80,38 @@ pub fn get_matches() -> clap::ArgMatches<'static> {
 
 impl From<clap::ArgMatches<'static>> for CLIArgValues {
     fn from(matches: clap::ArgMatches<'static>) -> Self {
-            match (matches.is_present("playground"), matches.is_present("tutorial")) {
-            (true, false) => {
-                // Check for playground values
-                if matches.is_present("words") {
+        use CLIArgValues::*;
+        use PlaygroundArgValues::*;
+        match matches.subcommand() {
+            ("playground", Some(playground_matches)) => {
+                if let Some(words) = playground_matches.values_of("words") {
                     let values: Vec<String> = 
-                        matches
-                        .values_of("words")
-                        .unwrap()   // Safe to unwrap because we know these args were passed
+                        words
                         .map(|str| String::from(str))
                         .collect();
-
-                    Self::Playground(Some(PlaygroundArgValues::Words(values)))
-                    // Self::Playground(None)
-                } else if matches.is_present("filename") {
-                    // good god
-                    Self::Playground(Some(PlaygroundArgValues::Filename(
-                        String::from(matches.value_of("filename").unwrap())
+                    
+                    Playground(Some(Words(values)))
+                } else if let Some(filename) = playground_matches.value_of("filename") {
+                    Playground(Some(Filename(
+                        String::from(filename)
                     )))
                 } else {
-                    Self::Playground(None)
+                    Playground(None)
                 }
+            }
 
-            }
-            (false, true) => {
-                if matches.is_present("lesson") {
-                    let lesson = matches.value_of("lesson").unwrap().parse::<u8>().unwrap();
-                    Self::Tutorial(Some(lesson))
+            ("tutorial", Some(tutorial_matches)) => {
+                if let Some(lesson) = tutorial_matches.value_of("lesson") {
+                    let lesson = lesson.parse::<u8>().unwrap();
+                    Tutorial(Some(lesson))
                 } else {
-                    Self::Tutorial(None)
+                    Tutorial(None)
                 }
             }
-            (false, false) => {
-                todo!()
-            }
-            (_, _) => {
+            _other => {
                 unreachable!();
             }
-        }        
+        }
 
     }
 }

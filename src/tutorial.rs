@@ -13,3 +13,13 @@ const LESSONS: [Lesson; 1] = [
     },
     // .. other lessons
 ];
+
+struct TutorialManager {}
+
+impl TutorialManager {
+	fn start () {
+		for _lesson in &LESSONS {
+
+		}
+	}
+}

@@ -1,5 +1,6 @@
 use crate::prompt::Prompt;
 use crate::utils;
+use crate::cliargs::PlaygroundArgValues::{self, *};
 
 use colored::*;
 
@@ -64,10 +65,31 @@ impl PlaygroundManager {
         )
     }
 
+    fn use_arg_values(values: Option<PlaygroundArgValues>, data: &mut PlaygroundData) {
+        if let Some(arg_vals) = values {
+            match arg_vals {
+                Words(words) => {
+                    print!("Loaded ");
+                    words.into_iter().for_each(|x| data.phrases.push(x));
+                    for str in data.phrases.iter() {
+                        print!("{} ", str.blue());
+                    }
+                    println!("from {}.", "`-w/--words`".blue().bold());
+                }
+                Filename(_filename) => {
+                    // TODO: implement reading the file and loading it 
+                    todo!()
+                }
+            }
+        }
+        // drop(values);
+    }
+
     /// Starts the Playground loop.
-    pub fn start() {
+    pub fn start(arg_values: Option<PlaygroundArgValues>) {
         PlaygroundManager::intro_text();
         let mut data = PlaygroundData::new();
+        PlaygroundManager::use_arg_values(arg_values, &mut data);
         loop {
             match data.editor.read_line(">> ") {
                 Ok(line) => data.parse(line.as_str()),
