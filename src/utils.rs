@@ -1,10 +1,11 @@
 use rustyline::error::ReadlineError;
-
 use regex::Regex;
 use colored::*;
 
+use crate::text::Text::{self, *};
+
 /// Checks for Regex matches
-pub(crate) fn print_captures(line: &str, phrases: &Vec<String>) {
+pub(crate) fn print_captures(line: &str, phrases: &Vec<Text>) {
     
     let re = match Regex::new(line) {
         Ok(re) => re,
@@ -28,7 +29,11 @@ pub(crate) fn print_captures(line: &str, phrases: &Vec<String>) {
             }
             None => {
                 // Signal lack of match by issuing a red color
-                println!("{}", phrase.red())
+                match phrase {
+                    Word(word) => println!("{}", word.as_str().red()),
+                    Line(line) => println!("\"{}\"", line.as_str().red())
+                };
+                
             }
         }
     }
@@ -48,9 +53,18 @@ pub(crate) fn check_error(err: ReadlineError) {
     }
 }
 
-fn highlight_matches(matches: &Vec<regex::Match>, phrase: &String) {
+fn highlight_matches(matches: &Vec<regex::Match>, phrase: &Text) {
     let mut ranges = matches.iter().map(|x: &regex::Match| x.range());
     
+    let (is_line, phrase) = match phrase {
+        Word(word) => (false, word),
+        Line(line) => (true, line),
+    };
+
+    if is_line {
+        print!("\"")
+    }
+
     let mut i = 0_usize;
     while i <= phrase.len() {
         if let Some(range) = ranges.next() {
@@ -65,5 +79,10 @@ fn highlight_matches(matches: &Vec<regex::Match>, phrase: &String) {
             break;
         }
     }
-    println!("");
+
+    if is_line {
+        println!("\"")      
+    } else {
+        println!("");
+    }
 }

@@ -1,28 +1,29 @@
 use crate::prompt::Prompt;
 use crate::utils;
 use crate::cliargs::PlaygroundArgValues::{self, *};
+use crate::text::Text::{self, *};
 
 use colored::*;
 
 struct PlaygroundData {
-    pub phrases: Vec<String>,
+    pub test_strings: Vec<Text>,
     pub editor: Prompt,
 }
 
 impl PlaygroundData {    
     fn new () -> Self {
         Self {
-            phrases: vec![],
+            test_strings: vec![],
             editor: Prompt::new()
         }
     }
 
     fn print_help() {
-        println!();
-        println!();
+        todo!()
     }
 
     fn parse (&mut self, line: &str) {
+        // TODO: add commands such as #addword and #addline
         let line = line.trim();
         if line.starts_with('#') {
             // Likely a command, such as #help or #add
@@ -31,23 +32,28 @@ impl PlaygroundData {
                 "#help" => { 
                     println!("help heree")  
                 },
-                "#add" => {
+                "#addword" => {
                     // TODO: add support for "# add" as well
-                    words.iter().skip(1).for_each(|&s| self.phrases.push(s.into()));
+                    words.iter().skip(1).for_each(|&s| self.test_strings.push(Word(s.into())));
+                    return;
+                },
+                "#addline" => {
+                    // TODO: don't break words in here, put the whole line in
+                    words.iter().skip(1).for_each(|&s| self.test_strings.push(Line(s.into())));
                     return;
                 },
                 "#read" => {
                     // TODO: read a file text into Jacarex
                 },
                 "#clear" => {
-                    self.phrases.clear();
+                    self.test_strings.clear();
                     return;
                 }
                 _ => {}
             }
         }
 
-        utils::print_captures(line, &self.phrases);
+        utils::print_captures(line, &self.test_strings);
     }
 }
 
@@ -56,11 +62,11 @@ pub struct PlaygroundManager {}
 impl PlaygroundManager {
     /// Prints the introductory playground text
     fn intro_text() {
-        println!("Welcome to the {} {}. Type in {} to get additional help. \nType in {} {} to add a new string as a test target.",
+        println!("Welcome to the {} {}. Type in {} to get additional help. \nType in {} {} to add new words as test targets.",
             "Jacarex".green(),
             "Playground".green().bold(),
             "#help".blue(),
-            "#add".blue(),
+            "#addword".blue(),
             "<strings>".blue().bold(),
         )
     }
@@ -70,9 +76,9 @@ impl PlaygroundManager {
             match arg_vals {
                 Words(words) => {
                     print!("Loaded ");
-                    words.into_iter().for_each(|x| data.phrases.push(x));
-                    for str in data.phrases.iter() {
-                        print!("{} ", str.blue());
+                    words.into_iter().for_each(|x| data.test_strings.push(Word(x)));
+                    for text in data.test_strings.iter() {
+                        print!("{} ", text.as_str().blue());
                     }
                     println!("from {}.", "`-w/--words`".blue().bold());
                 }
@@ -82,7 +88,6 @@ impl PlaygroundManager {
                 }
             }
         }
-        // drop(values);
     }
 
     /// Starts the Playground loop.

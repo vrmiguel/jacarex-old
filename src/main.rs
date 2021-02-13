@@ -3,6 +3,7 @@ mod playground;
 mod utils;
 mod tutorial;
 mod cliargs;
+mod text;
 
 use cliargs::{get_matches, CLIArgValues::{self, *}};
 
