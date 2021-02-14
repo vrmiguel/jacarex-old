@@ -28,6 +28,34 @@ impl<'t> RegexAttempt<'t> {
         })
     }
 
+    /// matched_all returns true if the regex rule supplied matches the entire set of test strings
+    /// Note: partial match of strings don't count.
+    pub fn matched_all(&self) -> bool {
+        for (phrase, capture) in self.test_strings.iter().zip(self.captures.iter()) {
+            match capture {
+                Some(cap) => {
+                    let match_ranges: Vec<std::ops::Range<usize>> = 
+                        cap
+                        .iter()
+                        .filter_map(|x| x)
+                        .map(|x| x.range())
+                        .collect();
+                    for range in match_ranges {
+                        if range.start != 0 || range.end != phrase.as_str().len() {
+                            // If control entered here, the regex rule did not match
+                            // the entire test string
+                            return false;
+                        }
+                    }
+                }
+                None => {
+                    return false;
+                }
+            }
+        }
+        true
+    }
+
     fn print_highlights(matches: &Vec<regex::Match>, phrase: &Text) {
         let mut ranges = matches.iter().map(|x: &regex::Match| x.range());
     
