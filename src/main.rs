@@ -4,6 +4,7 @@ mod utils;
 mod tutorial;
 mod cliargs;
 mod text;
+mod regexattempt;
 
 use cliargs::{get_matches, CLIArgValues::{self, *}};
 
