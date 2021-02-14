@@ -6,7 +6,7 @@ use rustyline::error::ReadlineError;
 
 /// Checks for Regex matches
 // pub(crate) fn print_captures(line: &str, phrases: &Vec<Text>) {
-    
+
 //     let re = match Regex::new(line) {
 //         Ok(re) => re,
 //         Err(err) => {
@@ -33,7 +33,7 @@ use rustyline::error::ReadlineError;
 //                     Word(word) => println!("{}", word.as_str().red()),
 //                     Line(line) => println!("\"{}\"", line.as_str().red())
 //                 };
-                
+
 //             }
 //         }
 //     }
@@ -43,10 +43,10 @@ pub(crate) fn check_error(err: ReadlineError) {
     match err {
         ReadlineError::Interrupted => {
             println!("SIGINT received. Exiting.");
-        },
+        }
         ReadlineError::Eof => {
             println!("EOF received. Exiting.");
-        },
+        }
         err => {
             eprintln!("Error: {:?}", err);
         }

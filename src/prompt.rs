@@ -3,7 +3,7 @@ use rustyline::Editor;
 
 /// Simple wrapper over a rustyline::Editor
 pub struct Prompt {
-    editor: rustyline::Editor<()>
+    editor: rustyline::Editor<()>,
 }
 
 impl Prompt {
@@ -11,10 +11,8 @@ impl Prompt {
     pub fn new() -> Self {
         let mut editor = Editor::<()>::new();
         if editor.load_history("history.txt").is_err() {}
-        
-        Self {
-            editor
-        }
+
+        Self { editor }
     }
 
     pub fn read_line(&mut self, prompt: &str) -> Result<String, ReadlineError> {
@@ -22,8 +20,8 @@ impl Prompt {
             Ok(line) => {
                 self.editor.add_history_entry(line.as_str());
                 Ok(line)
-            },
-            err => err
+            }
+            err => err,
         }
     }
 
@@ -32,5 +30,4 @@ impl Prompt {
             eprintln!("Warning: problem saving history: {:?}", err);
         }
     }
-
 }
