@@ -1,45 +1,22 @@
 use rustyline::error::ReadlineError;
-// use regex::Regex;
-// use colored::*;
+use regex::{self, Error::*};
 
-// use crate::text::Text::{self, *};
+pub (crate) fn show_regex_error(err: regex::Error) {
+    // The regex crate has nicely formatted errors, so
+    // it's better to deestructure them and show their 
+    // error messages rather than just using {:?}
+    match err {
+        Syntax(err)        => eprintln!("{}", err),
+        CompiledTooBig(size_limit) => eprintln!("The compiled program exceeded the set size limit ({}).", size_limit),
+        other => { 
+            // The only other error variant, __Nonexhaustive *should* be unreachable here, but
+            // rustc wants me to treat it anyway
+            eprintln!("{:?}", other)
+        }
+    }
+}
 
-/// Checks for Regex matches
-// pub(crate) fn print_captures(line: &str, phrases: &Vec<Text>) {
-
-//     let re = match Regex::new(line) {
-//         Ok(re) => re,
-//         Err(err) => {
-//             println!("Regex compilation error: {:?}", err);
-//             return;
-//         }
-//     };
-
-//     let captures : Vec<Option<regex::Captures>> =
-//         phrases
-//         .iter()
-//         .map(|phrase| re.captures(phrase.as_str()))
-//         .collect();
-
-//     for (phrase, capture) in phrases.iter().zip(captures.iter()) {
-//         match capture {
-//             Some(cap) => {
-//                 let matches: Vec<regex::Match> = cap.iter().filter_map(|x| x).collect();
-//                 highlight_matches(&matches, phrase);
-//             }
-//             None => {
-//                 // Signal lack of match by issuing a red color
-//                 match phrase {
-//                     Word(word) => println!("{}", word.as_str().red()),
-//                     Line(line) => println!("\"{}\"", line.as_str().red())
-//                 };
-
-//             }
-//         }
-//     }
-// }
-
-pub(crate) fn check_error(err: ReadlineError) {
+pub(crate) fn check_readline_error(err: ReadlineError) {
     match err {
         ReadlineError::Interrupted => {
             println!("SIGINT received. Exiting.");

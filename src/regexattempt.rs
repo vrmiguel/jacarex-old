@@ -26,24 +26,45 @@ impl<'t> RegexAttempt<'t> {
         })
     }
 
+
+    fn did_not_match(phrase: &Text, capture: &Option<regex::Captures>) -> bool {
+        match capture {
+            Some(cap) => {
+                let match_ranges: Vec<std::ops::Range<usize>> =
+                    cap.iter().filter_map(|x| x).map(|x| x.range()).collect();
+                for range in match_ranges {
+                    if range.start != 0 || range.end != phrase.as_str().len() {
+                        // If control entered here then the regex rule did not
+                        // match the entire test string
+                        return true;
+                    }
+                }
+            }
+            None => {
+                return true;
+            }
+        }
+        false
+    }
+
     /// passed_all_tests returns true if the regex rule supplied matches the entire set of test strings
     /// Note: partial match of strings don't count.
     pub fn passed_all_tests(&self, test_kinds: &[TestKind]) -> bool {
-        for (phrase, capture) in self.test_strings.iter().zip(self.captures.iter()) {
-            match capture {
-                Some(cap) => {
-                    let match_ranges: Vec<std::ops::Range<usize>> =
-                        cap.iter().filter_map(|x| x).map(|x| x.range()).collect();
-                    for range in match_ranges {
-                        if range.start != 0 || range.end != phrase.as_str().len() {
-                            // If control entered here then the regex rule did not
-                            // match the entire test string
-                            return false;
-                        }
+        use TestKind::*;
+        let triplets = self.test_strings
+            .iter()
+            .zip(self.captures.iter().zip(test_kinds.iter()));
+        for (phrase, (capture, test_kind)) in triplets {
+            match test_kind {
+                Match => {
+                    if Self::did_not_match(phrase, capture) {
+                        return false;
                     }
-                }
-                None => {
-                    return false;
+                },
+                TestKind::Skip => {
+                    if capture.is_some() {
+                        return false;
+                    }
                 }
             }
         }

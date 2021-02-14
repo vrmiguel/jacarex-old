@@ -78,7 +78,7 @@ impl PlaygroundData {
             Ok(attempt) => {
                 attempt.print_matches();
             }
-            Err(err) => eprintln!("Problem compiling regex: {:?}", err),
+            Err(err) => utils::show_regex_error(err),
         }
     }
 }
@@ -107,7 +107,7 @@ impl PlaygroundManager {
                 Ok(line) => data.parse(line.as_str()),
                 Err(err) => {
                     // Prints some additional info depending on which error we're getting
-                    utils::check_error(err);
+                    utils::check_readline_error(err);
                     data.editor.save_history();
                     return;
                 }
