@@ -22,12 +22,33 @@ lazy_static! {
     static ref LESSONS: Vec<Lesson> = vec![
         // Lesson 1: On wildcards and Kleene stars
         Lesson {
-            intro_text: format!("Matching the world\nIn regex, the period, '{}' is the {} which matches any single character.",
-                ".".green(), "wildcard pattern".blue().bold()
+            intro_text: format!("Lesson 1: {}\nIn regex, the period ('.') is the {} which matches any single character with the exception of newlines.
+For example, the rule `{}` would match the first three characters of \"Arnold\", resulting in \"{}old\".
+
+The asterisk, *, called the {} in the context of regex, matches the character preceding it any number of times (including zero).
+As an example, the rule `{}` would match the character 'a' any number of times.
+
+Try to combine both of these patterns to pass this lesson's tests.\n",
+                "Matching the world".cyan(),       // Title
+                "wildcard pattern".blue().bold(),  "...".bright_white(), "Arn".green(), // wildcard section
+                "Kleene star".blue().bold(), "a*".blue().bold()                         // asterisk section
             ),
             test_strings: ["int main (void) {}", "Google's PlayStation Series Switch", "Harry Potter"],
             test_kinds: [TestKind::Match; 3],
-            congratulations: "You did it!",
+            congratulations: "Good one ;)\n",
+        },
+        // Lesson 2
+        Lesson {
+            intro_text: format!("Lesson 2: {}\nThe caret (^) is the start of string anchor, that is, it matches at the start of the string the regex pattern is applied to.
+For example, the pattern `{}` when applied to \"abc\" yields in \"{}bc\" (matching the first position only), while applying the pattern `{}` to the string \"abc\" would result in {}, matching nothing at all.
+Try using the caret to pass this lesson's tests.\n", 
+                "The start of string anchor".cyan(),    // title
+                "^a".bright_white(), "a".green(),       // working example of caret
+                "^b".bright_white(), "abc".red()        // caret matching nothing   
+            ),
+            test_strings: ["The Daily News", "The Amazing Spider-Man", "A Boy"],
+            test_kinds: [TestKind::Match, TestKind::Match, TestKind::Skip],
+            congratulations: "Good job!\n"
         }
     ];
 }
@@ -36,8 +57,6 @@ lazy_static! {
 //     // Lesson 1
 //     Lesson {
 //         intro_text: "Matching the world\nIn regex, the period ('.') is the wildcard pattern which matches any single character.",
-//         test_strings: ["The Daily News", "The Amazing Spider-Man", "A Boy"],
-//         test_kinds: [TestKind::Match, TestKind::Match, TestKind::Skip],
 //         congratulations: "You did it!",
 //     },
 //     // Lesson 2
