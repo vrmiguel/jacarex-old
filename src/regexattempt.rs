@@ -11,12 +11,10 @@ pub struct RegexAttempt<'t> {
 }
 
 impl<'t> RegexAttempt<'t> {
-
     pub fn new(regex_rule: &str, test_strings: &'t [Text]) -> Result<Self, regex::Error> {
-
         let re = Regex::new(regex_rule)?;
 
-        let captures : Vec<Option<regex::Captures<'t>>> =
+        let captures: Vec<Option<regex::Captures<'t>>> =
             test_strings
             .iter()
             .map(|phrase| re.captures(phrase.as_str()))
@@ -42,8 +40,8 @@ impl<'t> RegexAttempt<'t> {
                         .collect();
                     for range in match_ranges {
                         if range.start != 0 || range.end != phrase.as_str().len() {
-                            // If control entered here, the regex rule did not match
-                            // the entire test string
+                            // If control entered here then the regex rule did not 
+                            // match the entire test string
                             return false;
                         }
                     }

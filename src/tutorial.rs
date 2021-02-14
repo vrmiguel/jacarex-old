@@ -11,6 +11,7 @@ struct Lesson {
     /// The strings the user will have to fully match in order to progress
     /// into the next lesson
     test_strings: [&'static str; 3],
+    test_kinds: [TestKind; 3],
     /// Some small text congratulating the user for concluding the lesson
     congratulations: &'static str,
 }
@@ -21,24 +22,30 @@ const LESSONS: [Lesson; 2] = [
     Lesson { 
         intro_text: "Lesson 1 placeholder text",
         test_strings: ["abc", "abcde", "abcdef"],
+        test_kinds: [TestKind::Match; 3],
         congratulations: "You did it!"
     },
     // Lesson 2
     Lesson { 
         intro_text: "Lesson 2 placeholder text",
         test_strings: ["abc123xyz", "define \"123\"", "var g = 123;"],
-        congratulations: "You did it!"
+        test_kinds: [TestKind::Match; 3],
+        congratulations: "Congrats!"
     }
 ];
 pub struct TutorialManager {}
+
+#[derive(Debug, Clone, Copy)]
+pub enum TestKind {
+    Match,
+    Skip
+}
 
 impl TutorialManager {
 	pub fn start (_arg_val: Option<u8>) {
         // TODO: use arg_val
         let mut editor = Prompt::new();
-        let mut solved;
 		for lesson in &LESSONS {
-            solved = false;
             let test_strings: Vec<Text> =
                 lesson
                 .test_strings
@@ -53,15 +60,15 @@ impl TutorialManager {
                 .for_each(|str| print!("\"{}\" ", str.blue()));
             println!("");
 
-            while !solved {
+            'repl: loop {
                 match editor.read_line(">> ") {
                     Ok(line) => {
                         match RegexAttempt::new(&line, &*test_strings) {
                             Ok(attempt) => {
                                 attempt.print_matches();
                                 if attempt.matched_all() {
-                                    solved = true;
                                     println!("{}", lesson.congratulations.green().bold());
+                                    break 'repl;
                                 }
                             },
                             Err(err) => eprintln!("Problem compiling regex: {:?}", err)
