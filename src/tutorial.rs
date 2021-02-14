@@ -19,9 +19,9 @@ struct Lesson {
 const LESSONS: [Lesson; 2] = [
     // Lesson 1
     Lesson {
-        intro_text: "Part 1: Learning about anchors",
-        test_strings: ["The news", "abcde", "abcdef"],
-        test_kinds: [TestKind::Match; 3],
+        intro_text: "Part 1: Learning about anchors\nPlaceholder explanation",
+        test_strings: ["The Daily News", "The Amazing Spider-Man", "A Boy"],
+        test_kinds: [TestKind::Match, TestKind::Match, TestKind::Skip],
         congratulations: "You did it!",
     },
     // Lesson 2
@@ -41,6 +41,25 @@ pub enum TestKind {
 }
 
 impl TutorialManager {
+
+    fn print_lesson_intro(lesson: &Lesson) {
+        use TestKind::*;
+        println!("{}", lesson.intro_text);
+            print!("You'll have to pass these tests: ");
+            for (test_string, test_kind) in lesson.test_strings.iter().zip(lesson.test_kinds.iter()) {
+                match test_kind {
+                    Match => {
+                        print!("{} ", test_string.green());
+                    },
+                    Skip => {
+                        print!("{} ", test_string.red());
+                    }
+                }
+            }
+            println!("\nStrings in {} have to be fully matched. Strings in {} have to be fully skipped.", 
+                "green".green(), "red".red());
+    }
+
     pub fn start(_arg_val: Option<u8>) {
         // TODO: use arg_val
         let mut editor = Prompt::new();
@@ -51,14 +70,10 @@ impl TutorialManager {
                 .map(|&x| Word(x.to_string()))
                 .collect();
 
-            println!("{}", lesson.intro_text);
-            print!("You'll have to match these words: ");
-            lesson
-                .test_strings
-                .iter()
-                .for_each(|str| print!("\"{}\" ", str.blue()));
-            println!("");
+            Self::print_lesson_intro(lesson);
 
+            // Starts the read-eval-print loop. It only stops if the user closes the process
+            // or if the user concludes the lesson, which would lead to the next lesson
             'repl: loop {
                 match editor.read_line(">> ") {
                     Ok(line) => match RegexAttempt::new(&line, &*test_strings) {
