@@ -16,6 +16,6 @@ fn main() {
     let cliargs = CLIArgValues::from(matches);
     match cliargs {
         Playground(arg_values) => playground::PlaygroundManager::start(arg_values),
-        Tutorial(arg_value) => tutorial::TutorialManager::start(arg_value),
+        Tutorial(arg_value)    => tutorial::TutorialManager::start(arg_value),
     }
 }

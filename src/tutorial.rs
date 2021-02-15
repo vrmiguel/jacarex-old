@@ -3,10 +3,10 @@ use std::vec;
 use colored::*;
 use lazy_static::lazy_static;
 
+use crate::prompt::{ManagerMode, Prompt};
+use crate::regexattempt::RegexAttempt;
 use crate::text::Text::{self, Word};
 use crate::utils;
-use crate::regexattempt::RegexAttempt;
-use crate::prompt::{Prompt, ManagerMode};
 
 #[allow(dead_code)]
 struct Lesson {
@@ -125,15 +125,25 @@ impl TutorialManager {
         );
     }
 
-    pub fn start(arg_val: Option<u8>) {
+    fn check_for_commands(line: &str) -> bool {
+        let words: Vec<&str> = line.split(' ').collect();
+        match words[0] {
+            line if line.starts_with("#help") => {
+                utils::help_on_characters();
+                true
+            }
+            _ => false,
+        }
+    }
 
+    pub fn start(arg_val: Option<u8>) {
         let to_skip = if let Some(val) = arg_val {
             if usize::from(val) > LESSONS.len() {
                 println!("jacarex: {}: value supplied to `-l/--lesson` is higher than the amount of lessons.", "warning".yellow());
                 0
             } else {
                 val - 1
-            } 
+            }
         } else {
             0
         };
@@ -152,16 +162,22 @@ impl TutorialManager {
             // or if the user concludes the lesson, which would lead to the next lesson
             'repl: loop {
                 match editor.read_line(">> ") {
-                    Ok(line) => match RegexAttempt::new(&line, &*test_strings) {
-                        Ok(attempt) => {
-                            attempt.print_matches();
-                            if attempt.passed_all_tests(&lesson.test_kinds) {
-                                println!("{}", lesson.congratulations.green().bold());
-                                break 'repl;
-                            }
+                    Ok(line) => {
+                        if Self::check_for_commands(&line) {
+                            // `check_for_commands` returns true if a command ran
+                            continue;
                         }
-                        Err(err) => utils::show_regex_error(err),
-                    },
+                        match RegexAttempt::new(&line, &*test_strings) {
+                            Ok(attempt) => {
+                                attempt.print_matches();
+                                if attempt.passed_all_tests(&lesson.test_kinds) {
+                                    println!("{}", lesson.congratulations.green().bold());
+                                    break 'repl;
+                                }
+                            }
+                            Err(err) => utils::show_regex_error(err),
+                        }
+                    }
                     Err(err) => {
                         // Prints some additional info depending on which error we're getting
                         utils::check_readline_error(err);

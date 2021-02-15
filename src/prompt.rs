@@ -54,6 +54,13 @@ fn playground_hints() -> HashSet<CommandHint> {
     set
 }
 
+fn tutorial_hints() -> HashSet<CommandHint> {
+    // TODO: add more stuff
+    let mut set = HashSet::new();
+    set.insert(CommandHint::new("#help", "#h"));
+    set
+}
+
 impl Hinter for EditorHinter {
     type Hint = CommandHint;
 
@@ -90,14 +97,15 @@ impl Hint for CommandHint {
     }
 }
 
-
-
 impl Prompt {
     /// Returns a new rustyline::Editor with history loaded in (if it exists)
     pub fn new(mode: ManagerMode) -> Self {
         let mut editor = Editor::<EditorHinter>::new();
         let hinter = EditorHinter {
-            hints: playground_hints()
+            hints: match mode {
+                ManagerMode::Tutorial   => tutorial_hints(),
+                ManagerMode::Playground => playground_hints()
+            }
         };
         editor.set_helper(Some(hinter));
         if editor.load_history("history.txt").is_err() {}

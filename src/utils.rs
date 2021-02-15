@@ -7,10 +7,10 @@ pub (crate) fn show_regex_error(err: regex::Error) {
     // it's better to deestructure them and show their 
     // error messages rather than just using {:?}
     match err {
-        Syntax(err)        => eprintln!("{}", err),
+        Syntax(err)                => eprintln!("{}", err),
         CompiledTooBig(size_limit) => eprintln!("The compiled program exceeded the set size limit ({}).", size_limit),
         other => { 
-            // The only other error variant, __Nonexhaustive *should* be unreachable here, but
+            // The only other error variant, __Nonexhaustive, *should* be unreachable here, but
             // rustc wants me to treat it anyway
             eprintln!("{:?}", other)
         }
