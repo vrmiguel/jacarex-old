@@ -5,7 +5,9 @@ use lazy_static::lazy_static;
 
 use crate::text::Text::{self, Word};
 use crate::utils;
-use crate::{prompt::Prompt, regexattempt::RegexAttempt};
+use crate::regexattempt::RegexAttempt;
+use crate::prompt::{Prompt, ManagerMode};
+
 #[allow(dead_code)]
 struct Lesson {
     /// The text to be shown to the user at the start of the lesson
@@ -136,7 +138,7 @@ impl TutorialManager {
             0
         };
 
-        let mut editor = Prompt::new();
+        let mut editor = Prompt::new(ManagerMode::Tutorial);
         for lesson in LESSONS.iter().skip(to_skip.into()) {
             let test_strings: Vec<Text> = lesson
                 .test_strings

@@ -3,7 +3,7 @@ use std::fs;
 use colored::*;
 
 use crate::cliargs::PlaygroundArgValues::{self, *};
-use crate::prompt::Prompt;
+use crate::prompt::{Prompt, ManagerMode};
 use crate::regexattempt::RegexAttempt;
 use crate::text::Text::{self, *};
 use crate::utils;
@@ -17,7 +17,7 @@ impl PlaygroundData {
     fn new() -> Self {
         Self {
             test_strings: vec![],
-            editor: Prompt::new(),
+            editor: Prompt::new(ManagerMode::Playground),
         }
     }
 
