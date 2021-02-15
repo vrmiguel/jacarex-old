@@ -5,7 +5,8 @@
 ## Build
 
 A Rust toolchain must be installed to build Jacarex. If you don't have one installed, get it at [rustup.rs](https://rustup.rs/)
-Jacarex is currently being developed in `rustc v 1.5.0`, but should be buildable on considerably older versions as well.
+
+Jacarex is currently being developed with `rustc v1.5.0`, but should be buildable on considerably older versions as well.
 
 ```bash
 git clone https://github.com/vrmiguel/jacarex   # clone the repo
