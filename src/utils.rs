@@ -26,7 +26,6 @@ pub (crate) fn help_on_characters() {
     println!("{} - Matches a character that is not whitespace.", "\\S".blue());
 }
 
-
 pub(crate) fn check_readline_error(err: ReadlineError) {
     match err {
         ReadlineError::Interrupted => {
