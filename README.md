@@ -1,6 +1,6 @@
 # jacarex
 
-`jacarex` is a small command-line tool for interactive regular expression testing (similar to many web-based tools), also (TODO!) featuring a small tutorial for regex-learning.
+`jacarex` is a small command-line tool for interactive regular expression testing (similar to many web-based tools), also featuring a small tutorial for regex learning.
 
 ## Build
 
@@ -38,7 +38,7 @@ The `playground` subcommand opens up a REPL where one can add in test strings an
 
 #### Example
 
-`<add example image here later>`
+![regex-playground-example](https://user-images.githubusercontent.com/36349314/107896510-363e9700-6f15-11eb-92fb-b4aad8c1ee76.png)
 
 #### Usage help
 
@@ -47,15 +47,15 @@ jacarex-playground
 Enters the Regex testing REPL.
 
 USAGE:
-    jacarex playground [ARGS]
+    jacarex playground [OPTIONS]
 
 FLAGS:
     -h, --help       Prints help information
     -V, --version    Prints version information
 
-ARGS:
-    <words>...    Loads the words passed as arguments as test strings for the tester
-    <filename>    Loads the words passed as arguments as test strings for the tester
+OPTIONS:
+    -f, --filename <filename>    Loads the file passed as argument as a test string
+    -w, --words <words>...       Loads the words passed as arguments as test strings
 
 Note: tester is an alias to playground, so `jacarex tester` works as well.
 ``` 
@@ -66,7 +66,7 @@ The `tutorial` subcommand starts a series of interactive guided lessons on regex
 
 #### Example
 
-`<add example image here later>`
+![regex-tutorial-example](https://user-images.githubusercontent.com/36349314/107896513-376fc400-6f15-11eb-95b2-ae24b29dd38b.png)
 
 #### Usage help
 
@@ -75,14 +75,14 @@ jacarex-tutorial
 Starts a set of guided interactive lessons on Regex matching.
 
 USAGE:
-    jacarex tutorial [lesson]
+    jacarex tutorial [OPTIONS]
 
 FLAGS:
     -h, --help       Prints help information
     -V, --version    Prints version information
 
-ARGS:
-    <lesson>    Sets the lesson to be loaded
+OPTIONS:
+    -l, --lesson <lesson>    Sets the lesson to be loaded
 ```
 
 ## Notes
@@ -90,3 +90,11 @@ ARGS:
 1. `jacarex` uses the excellent [`regex`](https://github.com/rust-lang/regex) crate, and therefore inherits its advantages, such as great performance, as well as its quirks (no backtracking, no look around, no UTF-16 support).
 
 2. `jacarex` relies on terminal colors to highlight matches (or lack thereof).  A `no-colors` feature is planned but not currently implemented.
+
+## Contributions
+
+Any contributions are welcome! 
+
+Specially in making new lesson for the tutorial
+
+Please file bugs on the [Issues page](https://github.com/vrmiguel/jacarex/issues/new)
