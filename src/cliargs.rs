@@ -40,8 +40,7 @@ pub fn get_matches() -> clap::ArgMatches<'static> {
                         .short("w")
                         .multiple(true)
                         .takes_value(true)
-                        // I'm only making this conflict to get better code ergonomics
-                        .help("Loads the words passed as arguments as test strings for the tester"),
+                        .help("Loads the words passed as arguments as test strings"),
                 )
                 .arg(
                     Arg::with_name("filename")
@@ -52,7 +51,7 @@ pub fn get_matches() -> clap::ArgMatches<'static> {
                         .takes_value(true)
                         .conflicts_with("words")
                         // TODO: add a file size limit?
-                        .help("Loads the words passed as arguments as test strings for the tester"),
+                        .help("Loads the file passed as argument as a test string"),
                 )
                 .after_help(
                     "Note: tester is an alias to playground, so `jacarex tester` works as well.",

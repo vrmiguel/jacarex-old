@@ -123,10 +123,21 @@ impl TutorialManager {
         );
     }
 
-    pub fn start(_arg_val: Option<u8>) {
-        // TODO: use arg_val
+    pub fn start(arg_val: Option<u8>) {
+
+        let to_skip = if let Some(val) = arg_val {
+            if usize::from(val) > LESSONS.len() {
+                println!("jacarex: {}: value supplied to `-l/--lesson` is higher than the amount of lessons.", "warning".yellow());
+                0
+            } else {
+                val - 1
+            } 
+        } else {
+            0
+        };
+
         let mut editor = Prompt::new();
-        for lesson in LESSONS.iter() {
+        for lesson in LESSONS.iter().skip(to_skip.into()) {
             let test_strings: Vec<Text> = lesson
                 .test_strings
                 .iter()
