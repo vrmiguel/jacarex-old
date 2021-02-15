@@ -71,7 +71,7 @@ impl<'t> RegexAttempt<'t> {
         true
     }
 
-    fn print_highlights(matches: &Vec<regex::Match>, phrase: &Text) {
+    fn print_highlights(matches: &[regex::Match], phrase: &Text) {
         let mut ranges = matches.iter().map(|x: &regex::Match| x.range());
 
         let (is_line, phrase) = match phrase {
@@ -101,7 +101,7 @@ impl<'t> RegexAttempt<'t> {
         if is_line {
             println!("\"")
         } else {
-            println!("");
+            println!();
         }
     }
 

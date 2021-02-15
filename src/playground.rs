@@ -1,3 +1,5 @@
+use std::fs;
+
 use colored::*;
 
 use crate::cliargs::PlaygroundArgValues::{self, *};
@@ -20,7 +22,21 @@ impl PlaygroundData {
     }
 
     fn print_help() {
-        todo!()
+        println!("{} receives a word (or a list of word) and adds it to the set of test targets. Note that this mode trims its words.", "#addword".blue());
+        println!("{} adds the entire line after the command as a test target. Trailing whitespace will be kept.", "#addline".blue());
+        println!("{} reads the indicated file and saves it as a single test target.", "#readfile".blue());
+        println!("{} clears all loaded test strings. If you just want to clean your terminal, Ctrl+L works.", "#clear".blue());
+    }
+
+    fn load_from_file(&mut self, filename: &str) {
+        match fs::read_to_string(filename) {
+            Ok(contents) => {
+                self.test_strings.push(Text::Line(contents));
+            },
+            Err(err) => {
+                eprintln!("Problem reading file: {:?}", err);
+            }
+        }
     }
 
     fn use_arg_values(&mut self, values: Option<PlaygroundArgValues>) {
@@ -36,9 +52,8 @@ impl PlaygroundData {
                     }
                     println!("from {}.", "`-w/--words`".blue().bold());
                 }
-                Filename(_filename) => {
-                    // TODO: implement reading the file and loading it
-                    todo!()
+                Filename(filename) => {
+                    self.load_from_file(&filename);
                 }
             }
         }
@@ -46,12 +61,15 @@ impl PlaygroundData {
 
     fn parse(&mut self, line: &str) {
         // TODO: add commands such as #addword and #addline
-        let line = line.trim();
+        let line = line.trim_start();
         if line.starts_with('#') {
             // Likely a command, such as #help or #add
             let words: Vec<&str> = line.split(' ').collect();
             match line {
-                line if line.starts_with("#help") => Self::print_help(),
+                line if line.starts_with("#help") =>  {
+                    Self::print_help();
+                    return;
+                }
                 line if line.starts_with("#clear") => {
                     self.test_strings.clear();
                     return;
@@ -64,11 +82,17 @@ impl PlaygroundData {
                     return;
                 }
                 line if line.starts_with("#addline") => {
-                    self.test_strings.push(Line(String::from(line)));
+                    if line.len() > 9 {
+                        self.test_strings.push(Line(String::from(&line[9..])))
+                    }
                     return;
                 }
-                // "#readfile" => {     // <- I'm unsure if I should add this one
-                // },
+                line if line.starts_with("#readfile") => {
+                    if line.len() > 10 {
+                        self.load_from_file(&line[10..]);
+                    }
+                    return;
+                },
                 _ => {}
             }
         }

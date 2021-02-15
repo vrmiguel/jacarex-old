@@ -84,8 +84,7 @@ impl From<clap::ArgMatches<'static>> for CLIArgValues {
         match matches.subcommand() {
             ("playground", Some(playground_matches)) => {
                 if let Some(words) = playground_matches.values_of("words") {
-                    let values: Vec<String> = words.map(|str| String::from(str)).collect();
-
+                    let values: Vec<String> = words.map(String::from).collect();
                     Playground(Some(Words(values)))
                 } else if let Some(filename) = playground_matches.value_of("filename") {
                     Playground(Some(Filename(String::from(filename))))
