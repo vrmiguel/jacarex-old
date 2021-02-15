@@ -5,6 +5,7 @@ mod regexattempt;
 mod text;
 mod tutorial;
 mod utils;
+mod rehelp;
 
 use cliargs::{
     get_matches,

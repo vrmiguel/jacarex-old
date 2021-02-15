@@ -17,15 +17,6 @@ pub (crate) fn show_regex_error(err: regex::Error) {
     }
 }
 
-pub (crate) fn help_on_characters() {
-    println!("{} - Matches one digit from 0 to 9", "\\d".blue());
-    println!("{} - Matches a character - ASCII or valid UTF-8", "\\w".blue());
-    println!("{} - Matches a whitespace character", "\\s".blue());
-    println!("{} - Matches a character that is not a digit", "\\D".blue());
-    println!("{} - Matches a character that is not part of the alphabet", "\\W".blue());
-    println!("{} - Matches a character that is not whitespace.", "\\S".blue());
-}
-
 pub(crate) fn check_readline_error(err: ReadlineError) {
     match err {
         ReadlineError::Interrupted => {

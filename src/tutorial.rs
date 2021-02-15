@@ -129,7 +129,7 @@ impl TutorialManager {
         let words: Vec<&str> = line.split(' ').collect();
         match words[0] {
             line if line.starts_with("#help") => {
-                utils::help_on_characters();
+                // utils::help_on_characters();
                 true
             }
             _ => false,
