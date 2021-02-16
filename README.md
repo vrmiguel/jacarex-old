@@ -1,21 +1,24 @@
 # jacarex
 
-`jacarex` is a small command-line tool for interactive regular expression testing (similar to many web-based tools), also featuring a small tutorial for regex learning.
+`jacarex` is a fast command-line tool for testing regular expressions _interactively_. \
+It also features a small tutorial for regex learning.
 
-## Build
+## Installation
 
-A Rust toolchain must be installed to build Jacarex. If you don't have one installed, get it at [rustup.rs](https://rustup.rs/)
+You need the Rust compiler to build `jacarex`. Get it at [rustup.rs](https://rustup.rs/)
 
-Jacarex is currently being developed with `rustc v1.5.0`, but should be buildable on considerably older versions as well.
+Jacarex is being developed with the current `rustc v1.50` version, but should be buildable on other recent versions as well.
 
 ```bash
 git clone https://github.com/vrmiguel/jacarex   # clone the repo
-cd jacarex && cargo run --release               # .. and build it
+cargo install --path jacarex                    # Install it
 ```
 
 ## Usage
 
-`jacarex` is based on subcommands.
+`jacarex` usage is based on subcommands (similar to `git`).
+
+The subcommands available are `playground` and `tutorial`.
 
 ```
 Simple regex tester and tutorial
@@ -35,7 +38,7 @@ SUBCOMMANDS:
 
 ### `jacarex playground`
 
-The `playground` subcommand opens up a REPL where one can add in test strings and interactively test regex rules against them.
+Opens up a REPL where you can test a pattern against multiple text samples.
 
 #### Example
 
@@ -50,10 +53,6 @@ Enters the Regex testing REPL.
 USAGE:
     jacarex playground [OPTIONS]
 
-FLAGS:
-    -h, --help       Prints help information
-    -V, --version    Prints version information
-
 OPTIONS:
     -f, --filename <filename>    Loads the file passed as argument as a test string
     -w, --words <words>...       Loads the words passed as arguments as test strings
@@ -65,8 +64,6 @@ Note: tester is an alias to playground, so `jacarex tester` works as well.
 
 The `tutorial` subcommand starts a series of interactive guided lessons on regex matching.
 
-#### Example
-
 ![regex-tutorial-example](https://user-images.githubusercontent.com/36349314/107896513-376fc400-6f15-11eb-95b2-ae24b29dd38b.png)
 
 #### Usage help
@@ -77,10 +74,6 @@ Starts a set of guided interactive lessons on Regex matching.
 
 USAGE:
     jacarex tutorial [OPTIONS]
-
-FLAGS:
-    -h, --help       Prints help information
-    -V, --version    Prints version information
 
 OPTIONS:
     -l, --lesson <lesson>    Sets the lesson to be loaded
